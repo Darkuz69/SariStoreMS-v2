@@ -87,7 +87,7 @@ cp .env.example .env.development
 cp .env.example .env.production
 # Fill in your PostgreSQL credentials
 
-# Initialize database
+# Initialize database and admin account (Please run this once, only!)
 npm run init:server --setAdmin
 
 # Run both frontend + backend
