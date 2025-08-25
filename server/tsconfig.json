@@ -1,0 +1,33 @@
+{
+  // Visit https://aka.ms/tsconfig to read more about this file
+  "compilerOptions": {
+    // Base Opts
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "es2022",
+    //"verbatimModuleSyntax": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    //"allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Strictness
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+
+    // Transpile Opts
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "sourceMap": true,
+
+    "lib": ["ES2022"],
+    
+    //"composite": true,
+    //"declarationMap": true,
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/node_modules"]
+}

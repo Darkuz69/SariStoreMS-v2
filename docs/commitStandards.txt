@@ -1,0 +1,23 @@
+Types:
+
+feat: Added a new feature (finally doing something useful)
+
+fix: Fixed a bug (probably one I made myself earlier)
+
+docs: Documentation updates (because future-me will forget)
+
+style: Code style changes (no functionality, just vibes)
+
+refactor: Restructuring code (because spaghetti doesn’t scale)
+
+perf: Performance improvements (pretending this app needs it)
+
+test: Adding or fixing tests (yes, I test sometimes)
+
+chore: Maintenance tasks (boring but necessary)
+
+db: Database changes (pray nothing breaks)
+
+ui: Frontend/UI changes (making it less ugly)
+
+revert: Reverts a previous commit

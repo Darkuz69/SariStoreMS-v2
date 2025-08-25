@@ -1,0 +1,90 @@
+Inventory
+- productID: int (FK)
+- quantity: int
+- reorderLevel: int
+- lastRestockedDate: timestamp
+- isLowStock(): boolean                                 // determine if product is on low
+
+// 1 Product - 1 Category
+ProductCategory:
+- name: string
+
+Product
+- name: string
+- productCategoryID: int (FK)
+- unitType: string
+- costPrice: float
+- sellPrice: float
+- isActive: boolean                                     // for soft delete
++ totalItemsSold(): int                                 // to be use on finding the popular item
++ isProductActive(): boolean                            // to be use to know if item is discontinued
+
+SaleItem
+- productID: int (FK)
+- saleID: int (FK)
+- quantity: int
+- totalPrice: float
+
+Sale
+- operatorID: int (FK)
+- customerID: int (FK, null)                            // null for cash-only sales
+- totalPrice: float
+- cashPaid: float
+- creditAmount: float
+- dueDate: timestamp (nullable)
+- saleDate: timestamp
+- isVoid: boolean                                       // for returns / mistaken records
+
+CreditTransaction
+- customerID: int (FK)
+- operatorID: int (FK)
+- saleID: int (FK, null)                                // null for payments
+- transactionType: enum('charge', 'payment')
+- amount: float                                         // + charge, - payments
+- runningBalance: float                                 // balance after transaction
+- transactionDate: timestamp
+
+Person:
+- firstName: string
+- lastName: string
+- middleName: string
+- suffix: string
+- birthDate: datetime
+
+// 1 Person - 1 or Many Addresses
+PersonAddress:
+- personID: int (FK)
+- addressID: int (FK)
+- isPrimary: boolean
+
+Address:
+- country: string
+- city: string
+- barangay: string
+- sitio: string
+- additionalInfo: string
+
+Customer
+- personID: int (FK)
++ getRemainingUtang(): float
+
+Operator
+- personID: int (FK)
+- operatorCode: string
+- passwordHash: string
+
+Role
+- roleName: string
+
+// 1 Operator - 1 or Many Roles
+OperatorRole
+- operatorID: int (FK)
+- roleID: int (FK)
+
+Permission
+- permissionName: string
+
+// 1 Role - 1 or Many Permissions
+RolePermission
+- roleID: int (FK)
+- permissionID: int (FK)

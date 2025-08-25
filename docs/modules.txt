@@ -1,0 +1,20 @@
+express => Server
+express-session + Connector + Driver => user sessions
+express-validator => validate user input
+express-async-handler => no try/catch
+
+passport => user authentication
+passporrt-local => local auth strategy
+
+dotenv => expose env variables
+sequelize => orm
+cors => x-origin
+
+Server setup => Session => Passport => Routes => Middlewares => Server startup
+Create a script to create databse if not exist
+Sync Models for accurate tables
+Create a global error handler, custom Error class
+Typescript is good, but had few headaches while using it
+Set standards for JSON responses
+Set standards for commits
+Pascal Case, looks good

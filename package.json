@@ -1,0 +1,23 @@
+{
+  "name": "saristorems",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:server": "cd server && npx cross-env NODE_ENV=development npm run dev",
+    "init:server": "cd server && npx cross-env NODE_ENV=development tsx ./src/scripts/database.script.js",
+    "init:server-admin": "cd server && npx cross-env NODE_ENV=development tsx ./src/scripts/database.script.js --setAdmin"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express-async-handler": "^1.2.0",
+    "zod": "^4.1.1"
+  }
+}
