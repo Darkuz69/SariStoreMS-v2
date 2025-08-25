@@ -83,7 +83,8 @@ npm run install:client
 
 # Setup environment
 cd server
-cp .env.example .env
+cp .env.example .env.development
+cp .env.example .env.production
 # Fill in your PostgreSQL credentials
 
 # Initialize database
