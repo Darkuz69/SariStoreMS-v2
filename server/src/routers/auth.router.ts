@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Router } from "express";
 import { AppResponse, StandardResponse } from "../utils/response.utils.js";
 import AuthMiddleware from "../middlewares/auth.middleware.js";
+import AuthController from "../controllers/auth.controller.js";
 
 const AuthRoute = Router();
 
@@ -26,7 +27,7 @@ AuthRoute.post("/", AuthMiddleware.InputSchema, (_req: Request, res: Response, _
 });
 
 AuthRoute.post("/login", AuthMiddleware.InputSchema, (_req: Request, res: Response, _next: NextFunction) => {
-
+    AuthController.Login(_req, res, _next);
 });
 
 export default AuthRoute;

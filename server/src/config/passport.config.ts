@@ -14,7 +14,6 @@ const MainStrategy: VerifyFunction = async(operatorCode: string, password: strin
         const user = await Operator.findOne({
             where: { operatorCode: operatorCode }
         });
-
         if(!user) {
             done(null, false);
             return;
@@ -32,21 +31,17 @@ const MainStrategy: VerifyFunction = async(operatorCode: string, password: strin
 };
 
 const LocalStrategy = new Strategy(StrategyOptions, MainStrategy);
-passport.use(LocalStrategy);
+passport.use('local', LocalStrategy);
 
 passport.serializeUser((user: any, done: Function) => {
     const operator = user as Model<OperatorAttributes>;
 
-    done(null, {
-        id: operator?.getDataValue("id"),
-        operatorCode: operator?.getDataValue("operatorCode")
-    });
+    done(null, operator?.getDataValue("id"));
 });
 
-passport.deserializeUser(async(serializedUser: { id: number, operatorCode: string }, done: Function) => {
+passport.deserializeUser(async(id: number, done: Function) => {
     try {
-        const user = await Operator.findByPk(serializedUser.id);
-
+        const user = await Operator.findByPk(id);
         done(null, user);
     } catch(error) {
         done(error, false);

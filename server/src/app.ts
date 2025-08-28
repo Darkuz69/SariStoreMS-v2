@@ -43,6 +43,7 @@ App.use(session({
         sameSite: "lax"
     }
 }));
+import "./config/passport.config.js"
 App.use(passport.initialize());
 App.use(passport.session());
 
@@ -54,7 +55,7 @@ App.get("/", (_req: Request, res: Response, _next: NextFunction) => {
     res.status(response.statusCode).json(response);
 });
 
-import { GlobalErrorHandler } from "./middlewares/error.middleware.js";
+import { GlobalErrorHandler } from "./middlewares/index.middleware.js";
 App.use(GlobalErrorHandler);
 
 

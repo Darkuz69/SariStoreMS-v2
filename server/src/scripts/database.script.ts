@@ -52,7 +52,7 @@ export const InitializeDatabase = async () => {
             lastName: "Doe",
             birthDate: new Date("2024-04-02")
         }, {
-            passwordHash: "Admin12345",
+            passwordHash: "Admin_12345",
         });
     } catch(error) {
         ResolveInitialSequelizeError(error);
