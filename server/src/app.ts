@@ -47,13 +47,11 @@ App.use(passport.initialize());
 App.use(passport.session());
 
 import IndexAPIRoute from "./routers/index.router.js";
-import { StandardResponse } from "./utils/response.utils.js";
+import { AppResponse } from "./utils/response.utils.js";
 App.use("/api", IndexAPIRoute);
 App.get("/", (_req: Request, res: Response, _next: NextFunction) => {
-    res.status(200).json({
-        success: true,
-        message: "Hello! from SariStroreMS!",
-    } satisfies StandardResponse);
+    const response = AppResponse.ok("Hello! from SariStoreMS!");
+    res.status(response.statusCode).json(response);
 });
 
 import { GlobalErrorHandler } from "./middlewares/error.middleware.js";

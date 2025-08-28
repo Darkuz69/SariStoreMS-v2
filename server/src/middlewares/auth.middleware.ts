@@ -1,6 +1,6 @@
 import Z from "zod"
 import { Request, Response, NextFunction } from "express";
-import { StandardResponse } from "../utils/response.utils.js";
+import { AppResponse, StandardResponse } from "../utils/response.utils.js";
 
 const LoginInputSchema = Z.object({
     operatorCode: Z.string()
@@ -28,50 +28,32 @@ export type LoginInputAttributes = Z.infer<typeof LoginInputSchema>;
 const AuthValidate = {
     OperatorCode: (operatorCode: string) => {
         const results = OperatorCodeSchema.safeParse(operatorCode);
-        return {
-            success: results.success,
-            message: "🚫 Validation Error!",
-            data: results.success ? results.data : null,
-            errors: results.success ? null : results.error.issues.map((issue) => (issue.message))
-        } satisfies StandardResponse;
+        if(!results.success) throw AppResponse.badRequest("🚫 Validation Error!", results.error.issues.map((issue) => issue.message));
     },
     Password: (password: string) => {
         const results = PasswordSchema.safeParse(password);
-        return {
-            success: results.success,
-            message: "🚫 Validation Error!",
-            data: results.success ? results.data : null,
-            errors: results.success ? null : results.error.issues.map((issue) => (issue.message))
-        } satisfies StandardResponse;
+        if(!results.success) throw AppResponse.badRequest("🚫 Validation Error!", results.error.issues.map((issue) => issue.message));
     },
     InputSchema: (operator: LoginInputAttributes) => {
         const results = LoginInputSchema.safeParse(operator);
-        return {
-            success: results.success,
-            message: "🚫 Validation Error!",
-            data: results.success ? results.data : null,
-            errors: results.success ? null : results.error.issues.map((issue) => (issue.message))
-        } satisfies StandardResponse;
+        if(!results.success) throw AppResponse.badRequest("🚫 Validation Error!", results.error.issues.map((issue) => issue.message));
     }
 };
 
 const AuthMiddleware = {
     OperatorCode: (req: Request, res: Response, next: NextFunction) => {
         const { operatorCode } = req.body;
-        const validationResult = AuthValidate.OperatorCode(operatorCode);
-        if(!validationResult.success) return res.status(400).json(validationResult);
+        AuthValidate.OperatorCode(operatorCode);
         next();
     },
     Password: (req: Request, res: Response, next: NextFunction) => {
         const { password } = req.body;
-        const validationResult = AuthValidate.Password(password);
-        if(!validationResult.success) return res.status(400).json(validationResult);
+        AuthValidate.Password(password);
         next();
     },
     InputSchema: (req: Request, res: Response, next: NextFunction) => {
         const { operatorCode, password } = req.body;
-        const validationResult = AuthValidate.InputSchema({ operatorCode: operatorCode, password: password });
-        if(!validationResult.success) return res.status(400).json(validationResult);
+        AuthValidate.InputSchema({ operatorCode: operatorCode, password: password });
         next();
     },
 };

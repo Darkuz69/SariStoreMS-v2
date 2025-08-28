@@ -20,7 +20,7 @@ const MainStrategy: VerifyFunction = async(operatorCode: string, password: strin
             return;
         }
 
-        if(!VerifyPassword(password, user.getDataValue("passwordHash"), user.getDataValue("salt"))) {
+        if(!VerifyPassword(password, user.getDataValue("passwordHash"), String(user.getDataValue("salt")))) {
             done(null, false);
             return;
         }
