@@ -1,0 +1,206 @@
+# Professional Code Commenting Standards
+
+## 1. Function/Method Documentation (JSDoc Style)
+
+```javascript
+/**
+ * Authenticates user credentials and creates session
+ * @param {string} operatorCode - Unique operator identifier
+ * @param {string} password - Plain text password
+ * @returns {Promise<StandardResponse>} Authentication result with session data
+ * @throws {AppError} When database connection fails or validation errors occur
+ * @example
+ * const result = await AuthService.authenticate('OP-123', 'password');
+ * if (result.success) { ... }
+ */
+async authenticate(operatorCode: string, password: string): Promise<StandardResponse> {
+    // Implementation
+}
+```
+
+## 2. Class Documentation
+
+```javascript
+/**
+ * Handles user authentication and session management
+ * 
+ * Provides methods for login, logout, session validation, and password management.
+ * Integrates with PostgreSQL session store and bcrypt password hashing.
+ * 
+ * @class AuthService
+ * @version 1.2.0
+ * @author Development Team
+ * @since 2024-01-15
+ */
+class AuthService {
+    // Class implementation
+}
+```
+
+## 3. Complex Logic Explanation
+
+```javascript
+// Algorithm: Check user permissions through role hierarchy
+// 1. Retrieve all roles assigned to operator
+// 2. For each role, check associated permissions
+// 3. Return true if ANY role grants the required permission
+const hasPermission = await this.checkRolePermissions(operatorId, resource, action);
+```
+
+## 4. Business Logic Context
+
+```javascript
+// Business Rule: Sessions expire after 8 hours of inactivity
+// Rolling sessions extend expiration on each request to prevent
+// unexpected logouts during active use
+rolling: true,
+maxAge: 8 * 60 * 60 * 1000, // 8 hours
+```
+
+## 5. Configuration Comments
+
+```javascript
+const sessionConfig = {
+    store: SessionStore,
+    secret: Env.SessionSecret,        // Environment variable for security
+    name: "sari.sid",                // Custom session cookie name
+    resave: false,                   // Don't save unchanged sessions
+    saveUninitialized: false,        // Don't create sessions for unauthenticated users
+    rolling: true,                   // Extend session on each request
+    cookie: {
+        httpOnly: true,              // Prevent XSS attacks
+        secure: Env.Mode === "production", // HTTPS only in production
+        sameSite: "lax"             // CSRF protection
+    }
+};
+```
+
+## 6. TODO and FIXME Comments
+
+```javascript
+// TODO: Implement rate limiting for login attempts (Ticket: AUTH-456)
+// FIXME: Handle edge case when session store is unavailable (Bug: #1234)
+// HACK: Temporary workaround for passport serialization issue
+// WARNING: This function modifies global state - use with caution
+// OPTIMIZE: Database query can be improved with proper indexing
+```
+
+## 7. Error Handling Documentation
+
+```javascript
+try {
+    await authenticateUser(credentials);
+} catch (error) {
+    // Handle authentication failures gracefully
+    // Log security events for monitoring
+    if (error instanceof ValidationError) {
+        // User input validation failed
+        return AppResponse.badRequest("Invalid credentials format");
+    } else if (error instanceof DatabaseError) {
+        // Database connectivity issues
+        logger.error("Auth database error:", error);
+        return AppResponse.serverError("Authentication service unavailable");
+    }
+    // Unexpected errors - log and return generic message
+    logger.error("Unexpected auth error:", error);
+    throw AppResponse.serverError("Authentication failed");
+}
+```
+
+## 8. API Endpoint Documentation
+
+```javascript
+/**
+ * POST /auth/login
+ * 
+ * Authenticates user credentials and establishes session
+ * 
+ * @route POST /auth/login
+ * @access Public
+ * @body {object} credentials - User login credentials
+ * @body {string} credentials.operatorCode - Operator identifier (format: OP-XXXXXXXX)
+ * @body {string} credentials.password - User password (min 8 chars, mixed case + numbers)
+ * 
+ * @returns {200} Success - User authenticated, session created
+ * @returns {400} Bad Request - Invalid input format
+ * @returns {401} Unauthorized - Invalid credentials
+ * @returns {429} Too Many Requests - Rate limit exceeded
+ * @returns {500} Server Error - Authentication service failure
+ * 
+ * @example
+ * POST /auth/login
+ * {
+ *   "operatorCode": "OP-88A3A744",
+ *   "password": "SecurePass123"
+ * }
+ */
+```
+
+## 9. Inline Comments (Use Sparingly)
+
+```javascript
+const permissions = await RolePermission.findAll({
+    include: [
+        {
+            model: Permission,
+            where: { resource, action },
+            required: true  // Inner join - only roles with this exact permission
+        },
+        {
+            model: Role,
+            required: true,
+            include: [{
+                model: OperatorRole,
+                where: { operatorID },
+                required: true  // Inner join - only roles belonging to this operator
+            }]
+        }
+    ]
+});
+
+// Single query replaces N+1 pattern for better performance
+return permissions.length > 0;
+```
+
+## 10. Section Separators
+
+```javascript
+// ==========================================
+// Authentication Middleware
+// ==========================================
+
+// ==========================================
+// Session Management
+// ==========================================
+
+// ------------------------------------------
+// Helper Functions
+// ------------------------------------------
+```
+
+## Comment Writing Guidelines
+
+### DO:
+- Explain **WHY**, not what
+- Document business rules and constraints
+- Include examples for complex functions
+- Use proper grammar and spelling
+- Keep comments up-to-date with code changes
+- Document security considerations
+- Explain performance optimizations
+
+### DON'T:
+- State the obvious: `i++; // increment i`
+- Leave outdated comments
+- Use profanity or unprofessional language
+- Comment every single line
+- Use comments to disable large code blocks
+- Write novels - be concise but complete
+
+### Comment Frequency:
+- **Every public function/method**: JSDoc documentation
+- **Complex algorithms**: Step-by-step explanation
+- **Business logic**: Context and reasoning
+- **Configuration**: Purpose of each setting
+- **Workarounds**: Why they exist and when to remove
+- **Performance-critical code**: Optimization rationale

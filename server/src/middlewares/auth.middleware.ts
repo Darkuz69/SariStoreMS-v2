@@ -1,6 +1,6 @@
 import Z from "zod"
 import { Request, Response, NextFunction } from "express";
-import { AppResponse, StandardResponse } from "../utils/response.utils.js";
+import { AppResponse } from "../utils/response.utils.js";
 
 const LoginInputSchema = Z.object({
     operatorCode: Z.string()
@@ -40,6 +40,13 @@ const AuthValidate = {
     }
 };
 
+/**
+ * Handles input validation methods for login
+ * 
+ * @class AuthMiddleware
+ * @author Darkuz69
+ * @since 2025-08-28
+ */
 const AuthMiddleware = {
     OperatorCode: (req: Request, res: Response, next: NextFunction) => {
         const { operatorCode } = req.body;

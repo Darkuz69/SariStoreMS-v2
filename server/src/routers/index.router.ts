@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Router } from "express";
 import AuthRoute from "./auth.router.js";
+import ProductRoute from "./product.router.js";
 import { AppResponse } from "../utils/response.utils.js";
 
 const IndexAPIRoute = Router();
@@ -17,5 +18,7 @@ V1Route.get("/", (_req: Request, res: Response, _next: NextFunction) => {
     const response = AppResponse.ok("Hello! from SariStoreMS API route!");
     res.status(response.statusCode).json(response);
 });
+
+V1Route.use("/product", ProductRoute);
 
 export default IndexAPIRoute;

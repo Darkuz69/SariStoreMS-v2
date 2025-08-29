@@ -12,20 +12,29 @@ export const CloseConnectionAndExit = (sequelize: Sequelize) => {
     process.exit(1);
 };
 
+import Inventory from "../models/inventory.model.js";
 import Operator from "../models/operator.model.js";
 import Permission, { PermissionAttributes } from "../models/permission.model.js";
 import Person from "../models/person.model.js";
+import Product from "../models/product.model.js";
+import ProductCategory from "../models/productCategory.model.js";
 import Role, { RoleAttributes } from "../models/role.model.js";
+
+import OperatorRole from "../models/operatorRole.model.js";
+import RolePermission from "../models/rolePermission.model.js";
 
 export const SyncModels = async() => {
     try {
         // Models with no FK
         await Permission.sync({ alter: true });
         await Person.sync({ alter: true });
+        await ProductCategory.sync({ alter: true });
         await Role.sync({ alter: true });
 
         // Models with FK
         await Operator.sync({ alter: true });
+        await Product.sync({ alter: true });
+        await Inventory.sync({ alter: true });
         
         // Junction Models
         await OperatorRole.sync({ alter: true });
@@ -35,9 +44,6 @@ export const SyncModels = async() => {
     }
 };
 
-import OperatorRole from "../models/operatorRole.model.js";
-import RolePermission from "../models/rolePermission.model.js";
-
 export const DefineAssociations = () => {
     try {
         // 1:1 Person => Operator
@@ -46,6 +52,22 @@ export const DefineAssociations = () => {
         });
         Operator.belongsTo(Person, {
             foreignKey: "personID"
+        });
+
+        // 1:M ProductCategory => Product
+        ProductCategory.hasMany(Product, {
+            foreignKey: "productCategoryID"
+        });
+        Product.belongsTo(ProductCategory, {
+            foreignKey: "productCategoryID"
+        });
+
+        // 1:1 Product => Inventory
+        Product.hasOne(Inventory, {
+            foreignKey: "productID",
+        });
+        Inventory.belongsTo(Product, {
+            foreignKey: "productID",
         });
 
         // 1:M through M:M Operator => Role
@@ -70,6 +92,21 @@ export const DefineAssociations = () => {
             through: RolePermission,
             foreignKey: "permissionID",
             otherKey: "roleID"
+        });
+
+        // Junction table connect
+        OperatorRole.belongsTo(Operator, {
+            foreignKey: "operatorID",
+        });
+        OperatorRole.belongsTo(Role, {
+            foreignKey: "roleID",
+        });
+
+        RolePermission.belongsTo(Role, {
+            foreignKey: "roleID",
+        });
+        RolePermission.belongsTo(Permission, {
+            foreignKey: "permissionID",
         });
     } catch(error) {
         ResolveInitialSequelizeError(error);
@@ -234,3 +271,28 @@ export const SeedRolesAndPermissions = async() => {
         ResolveInitialSequelizeError(error);
     }
 }
+
+const productCategories = [
+    "Foods & Snacks", 
+    "Beverages", 
+    "Rice & Cooking Essentials", 
+    "Household Items", 
+    "Personal Care & Hygiene", 
+    "Mobile & Miscellaneous"
+];
+
+export const SeedProductCategories = async() => {
+    console.log("🌱 Seeding product categories...");
+    
+    try {
+        for(let category of productCategories) {
+            await ProductCategory.findOrCreate({ 
+                where: { name: category }
+            });
+        }
+        
+        console.log("🪴  Product categories seeded successfully!")
+    } catch(error) {
+        ResolveInitialSequelizeError(error);
+    }
+};

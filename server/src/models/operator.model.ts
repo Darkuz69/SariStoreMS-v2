@@ -13,7 +13,7 @@ export type OperatorAttributes = {
     deletedAt?: Date,
 };
 
-export interface OperatorCreation extends Optional<OperatorAttributes, 'id' | 'createdAt' | 'updatedAt'>{};
+export interface OperatorCreation extends Optional<OperatorAttributes, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>{};
 
 const Operator = sequelize.define<Model<OperatorAttributes, OperatorCreation>>('Operator', {
     personID: {

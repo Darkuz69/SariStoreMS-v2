@@ -50,8 +50,9 @@ App.use(passport.session());
 import IndexAPIRoute from "./routers/index.router.js";
 import { AppResponse } from "./utils/response.utils.js";
 App.use("/api", IndexAPIRoute);
-App.get("/", (_req: Request, res: Response, _next: NextFunction) => {
-    const response = AppResponse.ok("Hello! from SariStoreMS!");
+App.get("/", (req: Request, res: Response, _next: NextFunction) => {
+    let user = (!req.isAuthenticated()) ? { login: false } : req.user;
+    const response = AppResponse.ok("Hello! from SariStoreMS!", user);
     res.status(response.statusCode).json(response);
 });
 

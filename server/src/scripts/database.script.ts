@@ -2,7 +2,7 @@ import { Sequelize, QueryTypes } from "sequelize";
 import { fileURLToPath } from 'url';
 import { BaseConfig } from "../config/database.config.js"
 import { Env } from "../config/env.config.js";
-import { CloseConnectionAndExit, DefineAssociations, ResolveInitialSequelizeError, SeedRolesAndPermissions, SyncModels } from "../utils/database.utils.js";
+import { CloseConnectionAndExit, DefineAssociations, ResolveInitialSequelizeError, SeedProductCategories, SeedRolesAndPermissions, SyncModels } from "../utils/database.utils.js";
 import { BootstrapAdmin } from "../utils/operator.utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -46,6 +46,7 @@ export const InitializeDatabase = async () => {
         console.log("✅ Database models synced. Proceeding to next task...");
 
         await SeedRolesAndPermissions();
+        await SeedProductCategories();
 
         await BootstrapAdmin({
             firstName: "John",

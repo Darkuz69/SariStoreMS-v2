@@ -13,7 +13,7 @@ export type PersonAttributes = {
     deletedAt?: Date,
 };
 
-interface PersonCreation extends Optional<PersonAttributes, 'id' | 'createdAt' | 'updatedAt'>{};
+interface PersonCreation extends Optional<PersonAttributes, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>{};
 
 const Person = sequelize.define<Model<PersonAttributes, PersonCreation>>('Person', {
     firstName: {

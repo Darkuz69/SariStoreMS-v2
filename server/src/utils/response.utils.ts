@@ -6,6 +6,16 @@ export type StandardResponse = {
     errors?: {} | [] | null
 };
 
+/**
+ * Standardized server response
+ * 
+ * Provide factory methods for common responses, either success or errors
+ * 
+ * @class AppResponse
+ * @extends Error
+ * @author Darkuz69
+ * @since 2025-08-28
+ */
 export class AppResponse extends Error implements StandardResponse {
     statusCode: number;
     success: boolean;

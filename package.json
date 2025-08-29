@@ -9,8 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:server": "cd server && npx cross-env NODE_ENV=development npm run dev",
-    "init:server": "cd server && npx cross-env NODE_ENV=development tsx ./src/scripts/database.script.js",
-    "init:server-admin": "cd server && npx cross-env NODE_ENV=development tsx ./src/scripts/database.script.js --setAdmin"
+    "init:server": "cd server && npx cross-env NODE_ENV=development tsx ./src/scripts/database.script.js"
   },
   "keywords": [],
   "author": "",

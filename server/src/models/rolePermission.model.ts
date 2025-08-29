@@ -11,7 +11,9 @@ export type RolePermissionAttributes = {
     deletedAt?: Date,
 };
 
-const RolePermission = sequelize.define<Model<RolePermissionAttributes>>("RolePermission", {
+interface RolePermissionCreation extends Optional<RolePermissionAttributes, "createdAt" | "updatedAt" | "deletedAt">{};
+
+const RolePermission = sequelize.define<Model<RolePermissionAttributes, RolePermissionCreation>>("RolePermission", {
     roleID: {
         type: DataTypes.INTEGER,
         allowNull: false,

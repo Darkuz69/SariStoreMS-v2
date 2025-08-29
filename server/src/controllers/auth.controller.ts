@@ -20,9 +20,11 @@ const AuthController = {
                     const response = AppResponse.serverError("⛔ Something went wrong", { err });
                     return res.status(response.statusCode).json(response);
                 }
-                const response = AppResponse.ok("👍 Operator authenticated!");
+                const response = AppResponse.ok("👍 Operator authenticated!", {
+                    user,
+                    redirect: '/home'
+                });
                 res.status(response.statusCode).json(response);
-                // res.redirect('/home/');
             });
         })(req, res, _next);
     }
