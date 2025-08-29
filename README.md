@@ -132,8 +132,8 @@ SariStoreMS/
 🛠 **Phase 2 – Backend Core (In Progress)**
 
 * [X] Authentication & Authorization (sessions, roles, permissions)
+* [X] Middleware for validation, error handling, and logging
 * [ ] API endpoints for POS, inventory, credit, and reports
-* [ ] Middleware for validation, error handling, and logging
 * [ ] **Commenting & documenting backend code for clarity** ✍️
 
 🎨 **Phase 3 – Frontend Development (Learning + Building)**
