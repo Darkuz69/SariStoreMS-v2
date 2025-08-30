@@ -249,10 +249,10 @@ export const SeedRolesAndPermissions = async() => {
             roleRecords[role.name] = newRole[0];
         }
 
-        const permissionRecods: Record<string, Model<PermissionAttributes>> = {};
+        const permissionRecords: Record<string, Model<PermissionAttributes>> = {};
         for(let permission of permissionsData) {
             const newPermission = await Permission.findOrCreate({ where: { resource: permission.resource, action: permission.action } });
-            permissionRecods[`${permission.resource}_${permission.action}`] = newPermission[0];
+            permissionRecords[`${permission.resource}_${permission.action}`] = newPermission[0];
         }
 
         for(let [role, permission] of Object.entries(rolePermissions)) {
@@ -260,7 +260,7 @@ export const SeedRolesAndPermissions = async() => {
                 await RolePermission.findOrCreate({
                     where: {
                         roleID: roleRecords[role]?.getDataValue("id"),
-                        permissionID: permissionRecods[key]?.getDataValue("id")
+                        permissionID: permissionRecords[key]?.getDataValue("id")
                     }
                 });
             }

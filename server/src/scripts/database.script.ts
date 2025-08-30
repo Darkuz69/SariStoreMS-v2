@@ -31,7 +31,7 @@ export const InitializeDatabase = async () => {
             
             if (!/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(Env.Database.Name)) throw new Error('Invalid database name format');
             await sequelize.query(`CREATE DATABASE ${Env.Database.Name}`);
-            console.log("👍 Database created succesfully!");
+            console.log("👍 Database created successfully!");
         } else {
             console.log("✅ Database found. Proceeding to next task...");
         }
