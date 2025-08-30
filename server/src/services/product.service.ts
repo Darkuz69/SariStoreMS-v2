@@ -16,12 +16,12 @@ const queryFilter = {
 
 const ProductService = {
     GetAll: async() => {
-        return Product.findAll({
+        return await Product.findAll({
             ...queryFilter
         });
     },
     GetOne: async(id: number) => {
-        return Product.findByPk(id, {
+        return await Product.findByPk(id, {
             ...queryFilter
         });
     },
