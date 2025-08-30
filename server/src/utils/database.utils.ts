@@ -1,4 +1,4 @@
-import { Sequelize, Error, Op, Model } from "sequelize";
+import { Sequelize, Error, Model } from "sequelize";
 
 export const ResolveInitialSequelizeError = (error: any) => {
     if(error instanceof Error) {
@@ -12,8 +12,10 @@ export const CloseConnectionAndExit = (sequelize: Sequelize) => {
     process.exit(1);
 };
 
+import Customer from "../models/customer.model.js";
 import Inventory from "../models/inventory.model.js";
 import Operator from "../models/operator.model.js";
+import Payment from "../models/payment.model.js";
 import Permission, { PermissionAttributes } from "../models/permission.model.js";
 import Person from "../models/person.model.js";
 import Product from "../models/product.model.js";
@@ -22,6 +24,8 @@ import Role, { RoleAttributes } from "../models/role.model.js";
 
 import OperatorRole from "../models/operatorRole.model.js";
 import RolePermission from "../models/rolePermission.model.js";
+import Transaction from "../models/transaction.model.js";
+import TransactionItem from "../models/transactionItem.model.js";
 
 export const SyncModels = async() => {
     try {
@@ -35,6 +39,10 @@ export const SyncModels = async() => {
         await Operator.sync({ alter: true });
         await Product.sync({ alter: true });
         await Inventory.sync({ alter: true });
+        await Customer.sync({ alter: true });
+        await Transaction.sync({ alter: true });
+        await TransactionItem.sync({ alter: true });
+        await Payment.sync({ alter: true });
         
         // Junction Models
         await OperatorRole.sync({ alter: true });
@@ -54,12 +62,28 @@ export const DefineAssociations = () => {
             foreignKey: "personID"
         });
 
+        // 1:1 Person => Operator
+        Person.hasOne(Customer, {
+            foreignKey: "personID"
+        });
+        Customer.belongsTo(Person, {
+            foreignKey: "personID"
+        });
+
         // 1:M ProductCategory => Product
         ProductCategory.hasMany(Product, {
             foreignKey: "productCategoryID"
         });
         Product.belongsTo(ProductCategory, {
             foreignKey: "productCategoryID"
+        });
+
+        // 1:M Transaction => Payment
+        Transaction.hasMany(Payment, {
+            foreignKey: "transactionID"
+        });
+        Payment.belongsTo(Transaction, {
+            foreignKey: "transactionID"
         });
 
         // 1:1 Product => Inventory
@@ -94,6 +118,31 @@ export const DefineAssociations = () => {
             otherKey: "roleID"
         });
 
+        // 1:M through M:M Operator => Customer
+        Operator.hasMany(Transaction, {
+            foreignKey: "operatorID",
+        });
+        Customer.hasMany(Transaction, {
+            foreignKey: "customerID",
+        });
+        TransactionItem.belongsTo(Transaction, {
+            foreignKey: "transactionID"
+        });
+        TransactionItem.belongsTo(Product, {
+            foreignKey: "productID"
+        });
+
+        Transaction.belongsToMany(Product, {
+            through: TransactionItem,
+            foreignKey: "transactionID",
+            otherKey: "productID",
+        });
+        Product.belongsToMany(Transaction, {
+            through: TransactionItem,
+            foreignKey: "productID",
+            otherKey: "transactionID"
+        });
+
         // Junction table connect
         OperatorRole.belongsTo(Operator, {
             foreignKey: "operatorID",
@@ -107,6 +156,13 @@ export const DefineAssociations = () => {
         });
         RolePermission.belongsTo(Permission, {
             foreignKey: "permissionID",
+        });
+
+        Transaction.belongsTo(Operator, {
+            foreignKey: "operatorID"
+        });
+        Transaction.belongsTo(Customer, {
+            foreignKey: "customerID"
         });
     } catch(error) {
         ResolveInitialSequelizeError(error);
